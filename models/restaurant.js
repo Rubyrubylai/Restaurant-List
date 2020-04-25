@@ -10,7 +10,7 @@ const restaurantSchema = new Schema({
         type: String,
         required: true
     },
-    address: {
+    location: {
         type: String,
         required: true
     },
@@ -24,6 +24,18 @@ const restaurantSchema = new Schema({
     },
     rating: {
         type: Number,
+        required: true
+    },
+    phone: {
+        type: String,
+        required: true
+    },
+    google_map: {
+        type: String,
+        required: true
+    },
+    name_en: {
+        type: String,
         required: true
     }
 })
