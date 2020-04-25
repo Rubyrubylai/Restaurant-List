@@ -6,6 +6,7 @@ const mongoose = require('mongoose')
 const Restaurant = require('./models/restaurant')
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
+const Handlebars = require('handlebars')
 
 mongoose.connect('mongodb://localhost/restaurant', { useNewUrlParser: true, useUnifiedTopology: true })
 const db = mongoose.connection
@@ -26,6 +27,15 @@ app.set('view engine', 'handlebars')
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(methodOverride('_method'))
+
+Handlebars.registerHelper('ifEquals', (a, b, options) => {
+    if (a===b) {
+        return options.fn(this)
+    }
+    else{
+        return options.inverse(this)
+    }
+})
 
 app.get('/', (req, res) => {
     Restaurant.find()
@@ -82,6 +92,7 @@ app.get('/edit/:restaurant_id', (req, res) => {
     Restaurant.findById(req.params.restaurant_id)
         .lean()
         .exec((err, restaurant) => {
+            console.log(restaurant)
             if (err) console.error(err)
             res.render('edit', {restaurant: restaurant})
         })

@@ -12,15 +12,15 @@
     <div class="form-group">
         <label for="category">類別</label>
         <select class="custom-select" id="category" name="category">
-            <option selected>選擇種類</option>
-            <option value="義式餐廳">義式餐廳</option>
-            <option value="美式">美式</option>
-            <option value="中東料理">中東料理</option>
-            <option value="日式料理">日式料理</option>
-            <option value="咖啡">咖啡</option>
-            <option value="酒吧">酒吧</option>
-            <option value="早午餐">早午餐</option>
-            <option value="泰式料理">泰式料理</option>
+            <option>選擇種類</option>
+            <option value="義式餐廳" {{#ifEquals restaurant.category "義式餐廳"}}selected{{/ifEquals}}>義式餐廳</option>
+            <option value="美式" {{#ifEquals restaurant.category "美式"}}selected{{/ifEquals}}>美式</option>
+            <option value="中東料理" {{#ifEquals restaurant.category "中東料理"}}selected{{/ifEquals}}>中東料理</option>
+            <option value="日式料理" {{#ifEquals restaurant.category "日式料理"}}selected{{/ifEquals}}>日式料理</option>
+            <option value="咖啡" {{#ifEquals restaurant.category "咖啡"}}selected{{/ifEquals}}>咖啡</option>
+            <option value="酒吧" {{#ifEquals restaurant.category "酒吧"}}selected{{/ifEquals}}>酒吧</option>
+            <option value="早午餐" {{#ifEquals restaurant.category "早午餐"}}selected{{/ifEquals}}>早午餐</option>
+            <option value="泰式料理" {{#ifEquals restaurant.category "泰式料理"}}selected{{/ifEquals}}>泰式料理</option>
         </select>
     </div>
     <div class="form-group">
