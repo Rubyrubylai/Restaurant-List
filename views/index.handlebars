@@ -4,22 +4,26 @@
     <div class="search-bar-inner">
       <form action="/search">
         <h4 class="mb-2">尋找餐廳：</h4>
-        <div class="input-group">
+        <div class="input-group col-10">
           <input type="text" name="keyword" class="form-control" placeholder="輸入餐廳" aria-label="Restaurant Name..." value="{{keyword}}" aria-describedby="search-button">
           <div class="input-group-append">
             <button class="btn btn-major" type="submit" id="search-button"><i class="fas fa-search"></i></button>
-          </div>
-          <div class="btn-group">
+          </div>              
+        </div>
+      </form>
+        <form action="/sort">
+          <div class="btn-group col-2">
             <button type="button" class="btn dropdown-toggle sort" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               排序
             </button>
             <div class="dropdown-menu sort">
-              <a class="dropdown-item sort-button" href="/sort/rating">依評分</a>
-              <a class="dropdown-item sort-button" href="/sort/name">依店名</a>
+              <button type="submit" class="dropdown-item sort-button" name="sort" value="nameA">A→Z</button>
+              <button type="submit" class="dropdown-item sort-button" name="sort" value="nameZ">Z→A</button>
+              <button type="submit" class="dropdown-item sort-button" name="sort" value="rating">評分</button>
+              <button type="submit" class="dropdown-item sort-button" name="sort" value="category">類別</button>
             </div>
           </div>
-        </div>
-      </form>
+        </form>     
     </div>
   </div>
 </div>

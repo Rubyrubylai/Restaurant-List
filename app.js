@@ -28,12 +28,6 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(methodOverride('_method'))
 
-function change(){ 
-    var num=document.getElementById("rating")
-    var location=document.getElementById("show") 
-    location.value=num.value
-} 
-
 Handlebars.registerHelper('ifEquals', (a, b, options) => {
     if (a===b) {
         return options.fn(this)
@@ -69,6 +63,40 @@ app.get('/search', (req, res) => {
             const regex = new RegExp(req.query.keyword, 'i')
             restaurants = restaurants.filter(restaurants => restaurants.name.match(regex))
             return res.render('index', {restaurants: restaurants, keyword: req.query.keyword})
+        })
+})
+
+const sortType = [
+    {
+        id: 'nameA',
+        name: 'name',
+        type: 'asc'
+    },
+    {
+        id: 'nameZ',
+        name: 'name',
+        type: 'desc'
+    },
+    {
+        id: 'rating',
+        name: 'rating',
+        type: 'asc'
+    },
+    {
+        id: 'category',
+        name: 'category',
+        type: 'asc'
+    }
+]
+
+app.get('/sort', (req, res) => {
+    const sort = sortType.find(sort => {return sort.id === req.query.sort})
+    Restaurant.find()
+        .sort({[`${sort.name}`]: sort.type})
+        .lean()
+        .exec((err, restaurants) => {
+            if (err) return console.error(err)
+            return res.render('index', {restaurants: restaurants})
         })
 })
 
@@ -131,26 +159,6 @@ app.delete('/delete/:restaurant_id', (req, res) => {
             return res.redirect('/')
         })
     })
-})
-
-app.get('/sort/rating', (req, res) => {
-    Restaurant.find()
-        .sort({rating: 'asc'})
-        .lean()
-        .exec((err, restaurants) => {
-            if (err) return console.error(err)
-            return res.render('index', {restaurants: restaurants})
-        })
-})
-
-app.get('/sort/name', (req, res) => {
-    Restaurant.find()
-        .sort({name: 'asc'})
-        .lean()
-        .exec((err, restaurants) => {
-            if (err) return console.error(err)
-            return res.render('index', {restaurants: restaurants})
-        })
 })
 
 app.listen(port, () => {

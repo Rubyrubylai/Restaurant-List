@@ -133,3 +133,7 @@ label{
 .sort-button{
   color: white;
 }
+
+.input-group{
+  float: left;
+}
