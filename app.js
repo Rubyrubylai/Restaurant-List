@@ -28,6 +28,12 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(methodOverride('_method'))
 
+function change(){ 
+    var num=document.getElementById("rating")
+    var location=document.getElementById("show") 
+    location.value=num.value
+} 
+
 Handlebars.registerHelper('ifEquals', (a, b, options) => {
     if (a===b) {
         return options.fn(this)
@@ -125,6 +131,26 @@ app.delete('/delete/:restaurant_id', (req, res) => {
             return res.redirect('/')
         })
     })
+})
+
+app.get('/sort/rating', (req, res) => {
+    Restaurant.find()
+        .sort({rating: 'asc'})
+        .lean()
+        .exec((err, restaurants) => {
+            if (err) return console.error(err)
+            return res.render('index', {restaurants: restaurants})
+        })
+})
+
+app.get('/sort/name', (req, res) => {
+    Restaurant.find()
+        .sort({name: 'asc'})
+        .lean()
+        .exec((err, restaurants) => {
+            if (err) return console.error(err)
+            return res.render('index', {restaurants: restaurants})
+        })
 })
 
 app.listen(port, () => {

@@ -124,3 +124,12 @@ label{
   bottom: 2em;
 }
 
+.sort{
+  background-color: #9b4b4b;
+  color: white;
+  margin-left: 2px;
+}
+
+.sort-button{
+  color: white;
+}
