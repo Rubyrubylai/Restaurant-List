@@ -2,7 +2,7 @@
 <div class="container search-bar">
   <div class="search-bar-outer">
     <div class="search-bar-inner">
-      <form action="/search">
+      <form action="/restaurants/search">
         <h4 class="mb-2">尋找餐廳：</h4>
         <div class="input-group col-10">
           <input type="text" name="keyword" class="form-control" placeholder="輸入餐廳" aria-label="Restaurant Name..." value="{{keyword}}" aria-describedby="search-button">
@@ -11,7 +11,7 @@
           </div>              
         </div>
       </form>
-        <form action="/sort">
+        <form action="/restaurants/sort">
           <div class="btn-group col-2">
             <button type="button" class="btn dropdown-toggle sort" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               排序
@@ -46,8 +46,8 @@
                 {{this.rating}}
                 <i class="fas fa-star fa-xs"></i>
               </span>
-              <form action="/delete/{{this._id}}?_method=DELETE" method="POST" style="display:inline;"><button type="submit" class="btn btn-outline-danger btn-sm" style="float:right;">刪除</button></form>
-              <a href="/edit/{{this._id}}"><button type="button" class="btn btn-outline-primary btn-sm " style="margin-right:4px; float:right;">編輯</button></a>              
+              <form action="/restaurants/{{this._id}}/delete?_method=DELETE" method="POST" style="display:inline;"><button type="submit" class="btn btn-outline-danger btn-sm" style="float:right;">刪除</button></form>
+              <a href="/restaurants/{{this._id}}/edit"><button type="button" class="btn btn-outline-primary btn-sm " style="margin-right:4px; float:right;">編輯</button></a>              
             </div>
           </div>
         </a>
@@ -58,7 +58,7 @@
 </div>
 
 <div id="add-circle">
-  <a href="/new">
+  <a href="/restaurants/new">
     <button type="button" class="btn-primary btn-lg rounded-circle" id="circle-button">
       <i class="fas fa-plus"></i>
     </button>

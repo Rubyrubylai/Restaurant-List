@@ -28,6 +28,9 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(methodOverride('_method'))
 
+app.use('/', require('./routes/home'))
+app.use('/restaurants', require('./routes/restaurant'))
+
 Handlebars.registerHelper('ifEquals', (a, b, options) => {
     if (a===b) {
         return options.fn(this)
@@ -37,129 +40,8 @@ Handlebars.registerHelper('ifEquals', (a, b, options) => {
     }
 })
 
-app.get('/', (req, res) => {
-    Restaurant.find()
-        .lean()
-        .exec((err, restaurants) => {
-            if (err) return console.error(err)
-            return res.render('index', {restaurants: restaurants})
-        })
-})
 
-app.get('/restaurants/:restaurant_id', (req, res) => {
-    Restaurant.findById(req.params.restaurant_id)
-        .lean()
-        .exec((err, restaurant) => {
-            if (err) return console.error(err)
-            res.render('show', {restaurant: restaurant})
-        })
-})
 
-app.get('/search', (req, res) => {
-    Restaurant.find()
-        .lean()
-        .exec((err, restaurants) => {
-            if (err) return console.error(err)
-            const regex = new RegExp(req.query.keyword, 'i')
-            restaurants = restaurants.filter(restaurants => restaurants.name.match(regex))
-            return res.render('index', {restaurants: restaurants, keyword: req.query.keyword})
-        })
-})
-
-const sortType = [
-    {
-        id: 'nameA',
-        name: 'name',
-        type: 'asc'
-    },
-    {
-        id: 'nameZ',
-        name: 'name',
-        type: 'desc'
-    },
-    {
-        id: 'rating',
-        name: 'rating',
-        type: 'asc'
-    },
-    {
-        id: 'category',
-        name: 'category',
-        type: 'asc'
-    }
-]
-
-app.get('/sort', (req, res) => {
-    const sort = sortType.find(sort => {return sort.id === req.query.sort})
-    Restaurant.find()
-        .sort({[`${sort.name}`]: sort.type})
-        .lean()
-        .exec((err, restaurants) => {
-            if (err) return console.error(err)
-            return res.render('index', {restaurants: restaurants})
-        })
-})
-
-app.get('/new', (req, res) => {
-    res.render('new')
-})
-
-app.post('/new', (req, res) => {
-    const restaurant = new Restaurant({
-        name: req.body.name,
-        name_en: req.body.name_en,
-        category: req.body.category,
-        location: req.body.location,
-        google_map: req.body.google_map,
-        phone: req.body.phone,
-        rating: req.body.rating,
-        description: req.body.description,
-        image: req.body.image        
-    })
-    restaurant.save(err => {
-        if (err) return console.error(err)
-        res.redirect('/')
-    })
-})
-
-app.get('/edit/:restaurant_id', (req, res) => {
-    Restaurant.findById(req.params.restaurant_id)
-        .lean()
-        .exec((err, restaurant) => {
-            console.log(restaurant)
-            if (err) console.error(err)
-            res.render('edit', {restaurant: restaurant})
-        })
-})
-
-app.put('/edit/:restaurant_id', (req, res) => {
-    Restaurant.findById(req.params.restaurant_id, (err, restaurant) => {
-        if (err) console.error(err)
-        restaurant.name = req.body.name
-        restaurant.name_en = req.body.name_en
-        restaurant.category = req.body.category
-        restaurant.location = req.body.location
-        restaurant.google_map = req.body.google_map
-        restaurant.phone = req.body.phone
-        restaurant.rating = req.body.rating
-        restaurant.description = req.body.description
-        restaurant.image = req.body.image  
-        restaurant.save(err => {
-            if (err) return console.error(err)
-            return res.redirect('/')
-        })
-    })
-})
-
-app.delete('/delete/:restaurant_id', (req, res) => {
-    Restaurant.findById(req.params.restaurant_id, (err, restaurant) => {
-        if (err) return console.error(err) 
-        restaurant.remove(err => {
-            if (err) return console.error(err)
-            return res.redirect('/')
-        })
-    })
-})
 
 app.listen(port, () => {
     console.log(`Express is listening on http://localhost:${port}`)
