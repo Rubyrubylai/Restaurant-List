@@ -2,15 +2,6 @@ const express = require('express')
 const router = express.Router()
 const Restaurant = require('../models/restaurant')
 
-//顯示餐廳詳細資料
-router.get('/:restaurant_id', (req, res) => {
-    Restaurant.findById(req.params.restaurant_id)
-        .lean()
-        .exec((err, restaurant) => {
-            if (err) return console.error(err)
-            return res.render('show', {restaurant: restaurant})
-        })
-})
 
 //搜尋餐廳
 router.get('/search', (req, res) => {
@@ -66,21 +57,55 @@ router.get('/new', (req, res) => {
 
 //新增餐廳
 router.post('/new', (req, res) => {
-    const restaurant = new Restaurant({
-        name: req.body.name,
-        name_en: req.body.name_en,
-        category: req.body.category,
-        location: req.body.location,
-        google_map: req.body.google_map,
-        phone: req.body.phone,
-        rating: req.body.rating,
-        description: req.body.description,
-        image: req.body.image        
-    })
-    restaurant.save(err => {
-        if (err) return console.error(err)
-        return res.redirect('/')
-    })
+    const {name, name_en, category, location, google_map, phone, rating, description, image} = req.body
+    let errors = []
+
+    if (!name || !name_en || !category || !location || !google_map || !phone || !rating || !description || !image){
+        errors.push({messages: '所有欄位皆為必填'})
+    }
+    
+    if (errors.length > 0){
+        res.render('new', {
+            errors,
+            name,
+            name_en,
+            category,
+            location,
+            google_map,
+            phone,
+            rating,
+            description,
+            image
+        })
+    } else {
+        const restaurant = new Restaurant({
+            name,
+            name_en,
+            category,
+            location,
+            google_map,
+            phone,
+            rating,
+            description,
+            image     
+        })
+        restaurant.save(err => {
+            if (err) return console.error(err)
+            return res.redirect('/')
+        })
+    }
+       
+})
+
+
+//顯示餐廳詳細資料
+router.get('/:restaurant_id', (req, res) => {
+    Restaurant.findById(req.params.restaurant_id)
+        .lean()
+        .exec((err, restaurant) => {
+            if (err) return console.error(err)
+            return res.render('show', {restaurant: restaurant})
+        })
 })
 
 //進入編輯餐廳的頁面

@@ -7,6 +7,8 @@ const Restaurant = require('./models/restaurant')
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 const Handlebars = require('handlebars')
+const flash = require('connect-flash')
+const session = require('express-session')
 
 mongoose.connect('mongodb://localhost/restaurant', { useNewUrlParser: true, useUnifiedTopology: true })
 const db = mongoose.connection
@@ -28,6 +30,20 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(methodOverride('_method'))
 
+app.use(session({
+    secret: 'your secret key',
+    resave: false,
+    saveUninitialized: true,
+}))
+
+app.use(flash())
+
+app.use((req, res, next) => {
+    res.locals.success_msg = req.flash('success_msg')
+    res.locals.warning_msg = req.flash('warning_msg')
+    next()
+})
+
 app.use('/', require('./routes/home'))
 app.use('/restaurants', require('./routes/restaurant'))
 
@@ -39,9 +55,6 @@ Handlebars.registerHelper('ifEquals', (a, b, options) => {
         return options.inverse(this)
     }
 })
-
-
-
 
 app.listen(port, () => {
     console.log(`Express is listening on http://localhost:${port}`)
