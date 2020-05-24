@@ -4,7 +4,7 @@ const Restaurant = require('../models/restaurant')
 const { authenticated } = require('../config/auth')
 
 router.get('/', authenticated, (req, res) => {
-    Restaurant.find()
+    Restaurant.find({userId: req.user._id})
         .lean()
         .exec((err, restaurants) => {
             if (err) return console.error(err)
