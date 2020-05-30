@@ -11,7 +11,7 @@ router.get('/search', authenticated, (req, res) => {
             if (err) return console.error(err)
             const regex = new RegExp(req.query.keyword, 'i')
             restaurants = restaurants.filter(restaurants => restaurants.name.match(regex))
-            return res.render('index', {restaurants: restaurants, keyword: req.query.keyword})
+            return res.render('index', { restaurants: restaurants, keyword: req.query.keyword })
         })
 })
 
@@ -46,7 +46,7 @@ router.get('/sort', authenticated, (req, res) => {
         .lean()
         .exec((err, restaurants) => {
             if (err) return console.error(err)
-            return res.render('index', {restaurants: restaurants})
+            return res.render('index', { restaurants: restaurants })
         })
 })
 
@@ -57,12 +57,12 @@ router.get('/new', authenticated, (req, res) => {
 
 //新增餐廳
 router.post('/new', authenticated, (req, res) => {
-    const {name, name_en, category, location, google_map, phone, rating, description, image} = req.body
+    const { name, name_en, category, location, google_map, phone, rating, description, image } = req.body
     const userId = req.user._id
     let errors = []
 
     if (!name || !name_en || !category || !location || !google_map || !phone || !rating || !description || !image){
-        errors.push({messages: '所有欄位皆為必填'})
+        errors.push({ messages: '所有欄位皆為必填' })
     }
     
     if (errors.length > 0){
@@ -102,27 +102,27 @@ router.post('/new', authenticated, (req, res) => {
 
 //顯示餐廳詳細資料
 router.get('/:restaurant_id', authenticated, (req, res) => {
-    Restaurant.findOne({_id: req.params.restaurant_id, userId: req.user._id})
+    Restaurant.findOne({ _id: req.params.restaurant_id, userId: req.user._id })
         .lean()
         .exec((err, restaurant) => {
             if (err) return console.error(err)
-            return res.render('show', {restaurant: restaurant})
+            return res.render('show', { restaurant: restaurant })
         })
 })
 
 //進入編輯餐廳的頁面
 router.get('/:restaurant_id/edit', authenticated, (req, res) => {
-    Restaurant.findOne({_id: req.params.restaurant_id, userId: req.user._id})
+    Restaurant.findOne({ _id: req.params.restaurant_id, userId: req.user._id })
         .lean()
         .exec((err, restaurant) => {
             if (err) console.error(err)
-            return res.render('edit', {restaurant: restaurant})
+            return res.render('edit', { restaurant: restaurant })
         })
 })
 
 //編輯餐廳
 router.put('/:restaurant_id/edit', authenticated, (req, res) => {
-    Restaurant.findOne({_id: req.params.restaurant_id, userId: req.user._id}, (err, restaurant) => {
+    Restaurant.findOne({ _id: req.params.restaurant_id, userId: req.user._id }, (err, restaurant) => {
         if (err) console.error(err)
         restaurant.name = req.body.name
         restaurant.name_en = req.body.name_en
@@ -142,7 +142,7 @@ router.put('/:restaurant_id/edit', authenticated, (req, res) => {
 
 //刪除餐廳
 router.delete('/:restaurant_id/delete', authenticated, (req, res) => {
-    Restaurant.findOne({_id: req.params.restaurant_id, userId: req.user._id}, (err, restaurant) => {
+    Restaurant.findOne({ _id: req.params.restaurant_id, userId: req.user._id }, (err, restaurant) => {
         if (err) return console.error(err) 
         restaurant.remove(err => {
             if (err) return console.error(err)

@@ -9,15 +9,15 @@ if (process.env.NODE_ENV !== 'production'){
 const User = require('../models/user')
 
 module.exports = passport => {
-    passport.use(new LocalStrategy({ usernameField: 'email'}, (email, password, done) => {
-        User.findOne( { email: email }).then(user => {
-            if (!user) { return done(null, false), { message: 'That email is not registered'}}
+    passport.use(new LocalStrategy({ usernameField: 'email', passReqToCallback: true }, (req, email, password, done) => {
+        User.findOne({ email: email }).then(user => {
+            if (!user) {return done(null, false, req.flash('error_msg', '帳號或密碼輸入錯誤'))}
             bcrypt.compare(password, user.password, (err, isMatch) => {
                 if (err) throw err
                 if (isMatch) {
                     return done(null, user)
                 } else {
-                    return done(null, false), { message: 'Email or Password is incorrect'}
+                    return done(null, false, req.flash('error_msg', '帳號或密碼輸入錯誤'))
                 }
             })
         })
@@ -26,7 +26,7 @@ module.exports = passport => {
         clientID: process.env.FACEBOOK_ID,
         clientSecret: process.env.FACEBOOK_SECRET,
         callbackURL: process.env.FACEBOOK_CALLBACK,
-        profileFields: ['email', 'displayName']
+        profileFields: [ 'email', 'displayName' ]
     },
     (accessToken, refreshToken, profile, done) => {
         User.findOne( { email: profile._json.email }).then( user => {

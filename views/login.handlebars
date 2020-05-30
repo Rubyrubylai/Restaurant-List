@@ -9,8 +9,11 @@
             <label for="password">密碼</label>
             <input type="password" class="form-control" id="password" name="password" placeholder="請輸入您的密碼">
         </div>
-        <small>還沒有帳號嗎? <a href="/users/register">註冊</a>或</small>
-        <a href="/auth/facebook"><i class="fab fa-facebook-square" style="font-size:20px"></i></a>
-        <center><button type="submit" class="btn btn-major mt-4 mb-4">送出</button></center>
+        <div class="mb-2">
+            <small>還沒有帳號嗎? <a href="/users/register">註冊</a>或</small>
+            <a href="/auth/facebook"><i class="fab fa-facebook-square" style="font-size:20px"></i></a>
+        </div>        
+        {{>messages}}
+        <center><button type="submit" class="btn btn-major mt-2 mb-4">送出</button></center>
     </form>
 </div>

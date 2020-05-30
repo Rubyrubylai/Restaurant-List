@@ -20,40 +20,59 @@ router.get('/register', (req, res) => {
 })
 
 router.post('/register', (req, res) => {
-    const {name, email, password, password2} = req.body
-    User.findOne({email: email}).then(user => {
+    const { name, email, password, password2 } = req.body
+    let errors = []
+    User.findOne({ email: email }).then(user => {
         if (user) {
-            console.log('User already exists')
+            errors.push({ messages: '此用戶已經存在' })
             res.render('register', {
+                errors,
                 name,
                 email,
                 password,
                 password2
             })
     } else {
-        const newUser = new User({
-            name,
-            email,
-            password,
-            password2
-        })
-        bcrypt.genSalt(10, function(err, salt){
-            bcrypt.hash(newUser.password, salt, (err, hash) => {
-                if (err) throw err
-                newUser.password = hash
-                newUser.save()
-                    .then(user => {
-                        res.redirect('/')
-                    })
-                    .catch(err => console.log(err))
+        if (!email || !password || !password2){
+            errors.push({ messages: '帳號和密碼欄位為必填' }) 
+        }
+        if (password !== password2){
+            errors.push({ messages: '密碼不一致' })
+        }
+        if (errors.length > 0){
+            res.render('register', {
+                errors,
+                name,
+                email,
+                password,
+                password2
             })
-        })
+        } else {
+            const newUser = new User({
+                name,
+                email,
+                password,
+                password2
+            })
+            bcrypt.genSalt(10, function(err, salt){
+                bcrypt.hash(newUser.password, salt, (err, hash) => {
+                    if (err) throw err
+                    newUser.password = hash
+                    newUser.save()
+                        .then(user => {
+                            res.redirect('/')
+                        })
+                        .catch(err => console.log(err))
+                })
+            })
+        }     
         }
     })
 })
 
 router.get('/logout', (req, res) => {
     req.logOut()
+    req.flash('success_msg', '你已成功登出')
     res.redirect('/users/login')
 })
 
