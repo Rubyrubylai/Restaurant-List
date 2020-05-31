@@ -17,6 +17,7 @@
 + 使用者功能
 
 |功能|URL|描述|
+|----|---|----|
 |登入|/users/login|使用者登入|
 |FB登入|/auth/facebook|FB使用者登入|
 |登出|/users/logout|使用者登出|
