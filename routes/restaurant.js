@@ -103,16 +103,16 @@ router.get('/:restaurant_id/edit', authenticated, (req, res) => {
         .lean()
         .exec((err, restaurant) => {
             if (err) console.error(err)
-            return res.render('edit', { restaurant: restaurant, action: `/restaurants/${restaurant._id}/?_method=PUT` })
+            return res.render('edit', { restaurant: restaurant, action: `/restaurants/${req.params.restaurant_id}/edit?_method=PUT` })
         })
 })
 
 //編輯餐廳
 router.put('/:restaurant_id/edit', authenticated, (req, res) => {
     const { name, name_en, category, location, google_map, phone, rating, description, image } = req.body
-    if (!name || !name_en || !category || !location || !google_map || !phone || !rating || !description || !image){          
+    if (!name || !name_en || !category || !location || !google_map || !phone || !rating || !description || !image){       
         return res.render('edit', {
-            restaurant: { name, name_en, category, location, google_map, phone, rating, description, image },
+            restaurant: req.body,
             error_msg: '所有欄位皆為必填'
         })
      } 
