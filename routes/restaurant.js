@@ -59,26 +59,14 @@ router.get('/new', authenticated, (req, res) => {
 router.post('/new', authenticated, (req, res) => {
     const { name, name_en, category, location, google_map, phone, rating, description, image } = req.body
     const userId = req.user._id
-    let errors = []
-
-    if (!name || !name_en || !category || !location || !google_map || !phone || !rating || !description || !image){
-        errors.push({ messages: '所有欄位皆為必填' })
-    }
-    
-    if (errors.length > 0){
-        res.render('new', {
-            errors,
-            name,
-            name_en,
-            category,
-            location,
-            google_map,
-            phone,
-            rating,
-            description,
-            image
+    if (!name || !name_en || !category || !location || !google_map || !phone || !rating || !description || !image){          
+        return res.render('new', {
+            //將資料回傳到前端
+            restaurant: { name, name_en, category, location, google_map, phone, rating, description, image },
+            error_msg: '所有欄位皆為必填'
         })
-    } else {
+    } 
+    else {
         const restaurant = new Restaurant({
             name,
             name_en,
@@ -95,8 +83,7 @@ router.post('/new', authenticated, (req, res) => {
             if (err) return console.error(err)
             return res.redirect('/')
         })
-    }
-       
+    }      
 })
 
 
@@ -116,12 +103,19 @@ router.get('/:restaurant_id/edit', authenticated, (req, res) => {
         .lean()
         .exec((err, restaurant) => {
             if (err) console.error(err)
-            return res.render('edit', { restaurant: restaurant })
+            return res.render('edit', { restaurant: restaurant, action: `/restaurants/${restaurant._id}/?_method=PUT` })
         })
 })
 
 //編輯餐廳
 router.put('/:restaurant_id/edit', authenticated, (req, res) => {
+    const { name, name_en, category, location, google_map, phone, rating, description, image } = req.body
+    if (!name || !name_en || !category || !location || !google_map || !phone || !rating || !description || !image){          
+        return res.render('edit', {
+            restaurant: { name, name_en, category, location, google_map, phone, rating, description, image },
+            error_msg: '所有欄位皆為必填'
+        })
+     } 
     Restaurant.findOne({ _id: req.params.restaurant_id, userId: req.user._id }, (err, restaurant) => {
         if (err) console.error(err)
         restaurant.name = req.body.name
@@ -136,7 +130,7 @@ router.put('/:restaurant_id/edit', authenticated, (req, res) => {
         restaurant.save(err => {
             if (err) return console.error(err)
             return res.redirect('/')
-        })
+        })    
     })
 })
 

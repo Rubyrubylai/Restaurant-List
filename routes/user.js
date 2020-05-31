@@ -24,7 +24,7 @@ router.post('/register', (req, res) => {
     let errors = []
     User.findOne({ email: email }).then(user => {
         if (user) {
-            errors.push({ messages: '此用戶已經存在' })
+            errors.push({ msg: '此用戶已經存在' })
             res.render('register', {
                 errors,
                 name,
@@ -34,10 +34,10 @@ router.post('/register', (req, res) => {
             })
     } else {
         if (!email || !password || !password2){
-            errors.push({ messages: '帳號和密碼欄位為必填' }) 
+            errors.push({ msg: '帳號和密碼欄位為必填' }) 
         }
         if (password !== password2){
-            errors.push({ messages: '密碼不一致' })
+            errors.push({ msg: '密碼不一致' })
         }
         if (errors.length > 0){
             res.render('register', {

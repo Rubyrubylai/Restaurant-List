@@ -13,7 +13,7 @@
         <label for="category">類別</label>
         <select class="custom-select" id="category" name="category">
             <option>選擇種類</option>
-            <option value="義式餐廳" {{#ifEquals "{{restaurant.category}}" "義式餐廳"}}selected{{/ifEquals}}>義式餐廳</option>
+            <option value="義式餐廳" {{#ifEquals restaurant.category "義式餐廳"}}selected{{/ifEquals}}>義式餐廳</option>
             <option value="美式" {{#ifEquals restaurant.category "美式"}}selected{{/ifEquals}}>美式</option>
             <option value="中東料理" {{#ifEquals restaurant.category "中東料理"}}selected{{/ifEquals}}>中東料理</option>
             <option value="日式料理" {{#ifEquals restaurant.category "日式料理"}}selected{{/ifEquals}}>日式料理</option>
@@ -47,6 +47,7 @@
         <label for="image">相片</label>
         <input type="text" class="form-control" id="image" name="image" placeholder="輸入URL" value="{{restaurant.image}}">
     </div>
+    {{>messages}}
     <center><button type="submit" class="btn btn-major m-4">送出</button></center>
     </form>
 </div>

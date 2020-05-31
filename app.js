@@ -3,13 +3,16 @@ const app = express()
 const port = 3000
 const exphbs = require('express-handlebars')
 const mongoose = require('mongoose')
-const Restaurant = require('./models/restaurant')
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 const Handlebars = require('handlebars')
 const flash = require('connect-flash')
 const session = require('express-session')
 const passport = require('passport')
+
+if (process.env.NODE_ENV !== 'production'){
+    require('dotenv').config()
+}
 
 mongoose.connect('mongodb://localhost/restaurant', { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
 const db = mongoose.connection

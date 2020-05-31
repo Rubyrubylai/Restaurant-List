@@ -3,49 +3,49 @@
     <form action="/restaurants/new" method="POST">
     <div class="form-group mt-4">
         <label for="name">中文店名</label>
-        <input type="text" class="form-control" id="name" name="name" placeholder="輸入中文店名">
+        <input type="text" class="form-control" id="name" name="name" placeholder="輸入中文店名" value="{{restaurant.name}}">
     </div>
     <div class="form-group">
         <label for="name_en">英文店名</label>
-        <input type="text" class="form-control" id="name_en" name="name_en" placeholder="輸入英文店名">
+        <input type="text" class="form-control" id="name_en" name="name_en" placeholder="輸入英文店名" value="{{restaurant.name_en}}">
     </div>
     <div class="form-group">
         <label for="category">類別</label>
         <select class="custom-select" id="category" name="category">
-            <option selected>選擇種類</option>
-            <option value="義式餐廳">義式餐廳</option>
-            <option value="美式">美式</option>
-            <option value="中東料理">中東料理</option>
-            <option value="日式料理">日式料理</option>
-            <option value="咖啡">咖啡</option>
-            <option value="酒吧">酒吧</option>
-            <option value="早午餐">早午餐</option>
-            <option value="泰式料理">泰式料理</option>
+            <option>選擇種類</option>
+            <option value="義式餐廳" {{#ifEquals restaurant.category "義式餐廳"}}selected{{/ifEquals}}>義式餐廳</option>
+            <option value="美式" {{#ifEquals restaurant.category "美式"}}selected{{/ifEquals}}>美式</option>
+            <option value="中東料理" {{#ifEquals restaurant.category "中東料理"}}selected{{/ifEquals}}>中東料理</option>
+            <option value="日式料理" {{#ifEquals restaurant.category "日式料理"}}selected{{/ifEquals}}>日式料理</option>
+            <option value="咖啡" {{#ifEquals restaurant.category "咖啡"}}selected{{/ifEquals}}>咖啡</option>
+            <option value="酒吧" {{#ifEquals restaurant.category "酒吧"}}selected{{/ifEquals}}>酒吧</option>
+            <option value="早午餐" {{#ifEquals restaurant.category "早午餐"}}selected{{/ifEquals}}>早午餐</option>
+            <option value="泰式料理" {{#ifEquals restaurant.category "泰式料理"}}selected{{/ifEquals}}>泰式料理</option>
         </select>
     </div>
     <div class="form-group">
         <label for="location">地址</label>
-        <input type="text" class="form-control" id="location" name="location" placeholder="輸入地址">
+        <input type="text" class="form-control" id="location" name="location" placeholder="輸入地址" value="{{restaurant.location}}">
     </div>
     <div class="form-group">
         <label for="google_map">google地圖</label>
-        <input type="text" class="form-control" id="google_map" name="google_map" placeholder="輸入google連結">
+        <input type="text" class="form-control" id="google_map" name="google_map" placeholder="輸入google連結" value="{{restaurant.google_map}}">
     </div>
     <div class="form-group">
         <label for="phone">電話號碼</label>
-        <input type="text" class="form-control" id="phone" name="phone" placeholder="輸入電話號碼">
+        <input type="text" class="form-control" id="phone" name="phone" placeholder="輸入電話號碼" value="{{restaurant.phone}}">
     </div>
     <div class="form-group">
         <label for="rating">評分</label>
-        <input type="number" class="form-control" min="0" max="5" step="0.1" id="rating" name="rating" placeholder="輸入0-5分數">
+        <input type="number" class="form-control" min="0" max="5" step="0.1" id="rating" name="rating" placeholder="輸入0-5分數" value="{{restaurant.rating}}">
     </div>
     <div class="form-group">
         <label for="description">描述</label>
-        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+        <textarea class="form-control" id="description" name="description" rows="3">{{restaurant.description}}</textarea>
     </div>
     <div class="form-group">
         <label for="image">相片</label>
-        <input type="text" class="form-control" id="image" name="image" placeholder="輸入URL">
+        <input type="text" class="form-control" id="image" name="image" placeholder="輸入URL" value="{{restaurant.image}}">
     </div>
     {{>messages}}
     <center><button type="submit" class="btn btn-major m-4">送出</button></center>

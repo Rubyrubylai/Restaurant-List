@@ -2,9 +2,6 @@ const LocalStrategy = require('passport-local').Strategy
 const FacebookStrategy = require('passport-facebook').Strategy
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
-if (process.env.NODE_ENV !== 'production'){
-    require('dotenv').config()
-}
 
 const User = require('../models/user')
 
