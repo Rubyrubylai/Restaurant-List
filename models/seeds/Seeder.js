@@ -5,7 +5,7 @@ const restaurantSeed = require('./restaurant.json')
 const userSeed = require('./user.json')
 var bcrypt = require('bcryptjs')
 
-mongoose.connect('mongodb://localhost/restaurant', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/restaurant', { useNewUrlParser: true, useUnifiedTopology: true })
 
 const db = mongoose.connection
 

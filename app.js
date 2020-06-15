@@ -14,7 +14,7 @@ if (process.env.NODE_ENV !== 'production'){
     require('dotenv').config()
 }
 
-mongoose.connect('mongodb://localhost/restaurant', { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/restaurant', { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
 const db = mongoose.connection
 
 db.on('error', () => {
@@ -70,6 +70,6 @@ Handlebars.registerHelper('ifEquals', (a, b, options) => {
     }
 })
 
-app.listen(port, () => {
+app.listen(process.env.MONGODB_URI || port, () => {
     console.log(`Express is listening on http://localhost:${port}`)
 })
