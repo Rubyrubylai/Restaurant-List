@@ -70,6 +70,6 @@ Handlebars.registerHelper('ifEquals', (a, b, options) => {
     }
 })
 
-app.listen(process.env.MONGODB_URI || port, () => {
+app.listen(process.env.PORT || port, () => {
     console.log(`Express is listening on http://localhost:${port}`)
 })
