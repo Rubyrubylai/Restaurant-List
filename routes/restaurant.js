@@ -7,6 +7,7 @@ router.get('/', (req, res) => {
     Restaurant.find({ userId: req.user._id })
         .lean()
         .exec((err, restaurants) => {
+            let favorite = true
             //搜尋餐廳
             if (req.query.keyword) {   
                 const regex = new RegExp(req.query.keyword, 'i')
@@ -28,7 +29,7 @@ router.get('/', (req, res) => {
                 }
             })
             if (err) return console.error(err)
-            return res.render('index', { restaurants })
+            return res.render('index', { restaurants, favorite })
         })
 })
 
@@ -63,7 +64,7 @@ router.post('/new', (req, res) => {
         })
         restaurant.save(err => {
             if (err) return console.error(err)
-            return res.redirect('/')
+            return res.redirect('/restaurants')
         })
     }      
 })
@@ -75,7 +76,7 @@ router.get('/:restaurant_id', (req, res) => {
         .lean()
         .exec((err, restaurant) => {
             if (err) return console.error(err)
-            return res.render('show', { restaurant: restaurant })
+            return res.render('show', { restaurant })
         })
 })
 
@@ -112,7 +113,7 @@ router.put('/:restaurant_id/edit', (req, res) => {
         restaurant.image = image  
         restaurant.save(err => {
             if (err) return console.error(err)
-            return res.redirect('/')
+            return res.redirect('/restaurants')
         })    
     })
 })
@@ -123,7 +124,7 @@ router.delete('/:restaurant_id/delete', (req, res) => {
         if (err) return console.error(err) 
         restaurant.remove(err => {
             if (err) return console.error(err)
-            return res.redirect('/')
+            return res.redirect('/restaurants')
         })
     })
 })

@@ -60,7 +60,8 @@ router.post('/register', (req, res) => {
                     newUser.password = hash
                     newUser.save()
                         .then(user => {
-                            res.redirect('/')
+                            req.flash('success_msg', '你已經成功註冊，請登入')
+                            return res.redirect('/users/login')
                         })
                         .catch(err => console.log(err))
                 })

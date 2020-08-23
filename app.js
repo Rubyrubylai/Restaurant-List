@@ -10,6 +10,7 @@ const session = require('express-session')
 const passport = require('passport')
 const { authenticated } = require('./config/auth')
 
+
 if (process.env.NODE_ENV !== 'production'){
     require('dotenv').config()
 }
@@ -46,6 +47,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 require('./config/passport')(passport)
+
 
 app.use((req, res, next) => {
     res.locals.user = req.user

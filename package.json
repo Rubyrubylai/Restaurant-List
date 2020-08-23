@@ -23,6 +23,7 @@
     "handlebars": "^4.7.6",
     "method-override": "^3.0.0",
     "mongoose": "^5.9.10",
+    "node-popup": "^0.1.14",
     "passport": "^0.4.1",
     "passport-facebook": "^3.0.0",
     "passport-local": "^1.0.0"
