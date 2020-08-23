@@ -3,29 +3,6 @@ const router = express.Router()
 const Restaurant = require('../models/restaurant')
 const restaurant = require('../models/restaurant')
 
-const sortType = [
-    {
-        id: 'nameA',
-        name: 'name',
-        type: 'asc'
-    },
-    {
-        id: 'nameZ',
-        name: 'name',
-        type: 'desc'
-    },
-    {
-        id: 'rating',
-        name: 'rating',
-        type: 'asc'
-    },
-    {
-        id: 'category',
-        name: 'category',
-        type: 'asc'
-    }
-]
-
 router.get('/', (req, res) => {
     Restaurant.find({ userId: req.user._id })
         .lean()
@@ -36,25 +13,22 @@ router.get('/', (req, res) => {
                 restaurants = restaurants.filter(restaurant => restaurant.name.match(regex))
             }
             //排序餐廳
-            if (req.query.sort) {
-                const sort = sortType.find(sort => { return sort.id === req.query.sort})
-                console.log(typeof(sort.name))
-                //restaurants = restaurants.sort({ : sort.type})
-            }
+            restaurants.sort((a, b) => {
+                if (req.query.sort === 'nameA') {
+                    return a.name > b.name
+                }
+                if (req.query.sort === 'nameZ') {
+                    return b.name > a.name
+                }
+                if (req.query.sort === 'rating') {
+                    return b.rating > a.rating
+                }
+                if (req.query.sort === 'category') {
+                    return a.category > b.category
+                }
+            })
             if (err) return console.error(err)
             return res.render('index', { restaurants })
-        })
-})
-
-//排序餐廳
-router.get('/sort', (req, res) => {
-    const sort = sortType.find(sort => {return sort.id === req.query.sort})
-    Restaurant.find()
-        .sort({[`${sort.name}`]: sort.type})
-        .lean()
-        .exec((err, restaurants) => {
-            if (err) return console.error(err)
-            return res.render('index', { restaurants: restaurants })
         })
 })
 
