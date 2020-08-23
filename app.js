@@ -1,6 +1,5 @@
 const express = require('express')
 const app = express()
-const port = 3000
 const exphbs = require('express-handlebars')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
@@ -9,12 +8,13 @@ const Handlebars = require('handlebars')
 const flash = require('connect-flash')
 const session = require('express-session')
 const passport = require('passport')
+const { authenticated } = require('./config/auth')
 
 if (process.env.NODE_ENV !== 'production'){
     require('dotenv').config()
 }
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/restaurant', { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
 const db = mongoose.connection
 
 db.on('error', () => {
@@ -35,7 +35,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 
 app.use(session({
-    secret: 'your secret key',
+    secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: true,
 }))
@@ -56,10 +56,10 @@ app.use((req, res, next) => {
     next()
 })
 
-app.use('/', require('./routes/home'))
-app.use('/restaurants', require('./routes/restaurant'))
+app.use('/restaurants', authenticated, require('./routes/restaurant'))
 app.use('/users', require('./routes/user'))
 app.use('/auth', require('./routes/auth'))
+app.use('/', authenticated, require('./routes/home'))
 
 Handlebars.registerHelper('ifEquals', (a, b, options) => {
     if (a===b) {
@@ -70,6 +70,6 @@ Handlebars.registerHelper('ifEquals', (a, b, options) => {
     }
 })
 
-app.listen(process.env.PORT || port, () => {
-    console.log(`Express is listening on http://localhost:${port}`)
+app.listen(process.env.PORT, () => {
+    console.log(`Express is listening on ${process.env.PORT}`)
 })

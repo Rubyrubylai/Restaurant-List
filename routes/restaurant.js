@@ -1,19 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Restaurant = require('../models/restaurant')
-const { authenticated } = require('../config/auth')
-
-//搜尋餐廳
-router.get('/search', authenticated, (req, res) => {
-    Restaurant.find()
-        .lean()
-        .exec((err, restaurants) => {
-            if (err) return console.error(err)
-            const regex = new RegExp(req.query.keyword, 'i')
-            restaurants = restaurants.filter(restaurants => restaurants.name.match(regex))
-            return res.render('index', { restaurants: restaurants, keyword: req.query.keyword })
-        })
-})
+const restaurant = require('../models/restaurant')
 
 const sortType = [
     {
@@ -38,8 +26,28 @@ const sortType = [
     }
 ]
 
+router.get('/', (req, res) => {
+    Restaurant.find({ userId: req.user._id })
+        .lean()
+        .exec((err, restaurants) => {
+            //搜尋餐廳
+            if (req.query.keyword) {   
+                const regex = new RegExp(req.query.keyword, 'i')
+                restaurants = restaurants.filter(restaurant => restaurant.name.match(regex))
+            }
+            //排序餐廳
+            if (req.query.sort) {
+                const sort = sortType.find(sort => { return sort.id === req.query.sort})
+                console.log(typeof(sort.name))
+                //restaurants = restaurants.sort({ : sort.type})
+            }
+            if (err) return console.error(err)
+            return res.render('index', { restaurants })
+        })
+})
+
 //排序餐廳
-router.get('/sort', authenticated, (req, res) => {
+router.get('/sort', (req, res) => {
     const sort = sortType.find(sort => {return sort.id === req.query.sort})
     Restaurant.find()
         .sort({[`${sort.name}`]: sort.type})
@@ -51,12 +59,12 @@ router.get('/sort', authenticated, (req, res) => {
 })
 
 //進入新增餐廳的頁面
-router.get('/new', authenticated, (req, res) => {
+router.get('/new', (req, res) => {
     return res.render('new')
 })
 
 //新增餐廳
-router.post('/new', authenticated, (req, res) => {
+router.post('/new', (req, res) => {
     const { name, name_en, category, location, google_map, phone, rating, description, image } = req.body
     const userId = req.user._id
     if (!name || !name_en || !category || !location || !google_map || !phone || !rating || !description || !image){          
@@ -88,7 +96,7 @@ router.post('/new', authenticated, (req, res) => {
 
 
 //顯示餐廳詳細資料
-router.get('/:restaurant_id', authenticated, (req, res) => {
+router.get('/:restaurant_id', (req, res) => {
     Restaurant.findOne({ _id: req.params.restaurant_id, userId: req.user._id })
         .lean()
         .exec((err, restaurant) => {
@@ -98,7 +106,7 @@ router.get('/:restaurant_id', authenticated, (req, res) => {
 })
 
 //進入編輯餐廳的頁面
-router.get('/:restaurant_id/edit', authenticated, (req, res) => {
+router.get('/:restaurant_id/edit', (req, res) => {
     Restaurant.findOne({ _id: req.params.restaurant_id, userId: req.user._id })
         .lean()
         .exec((err, restaurant) => {
@@ -108,7 +116,7 @@ router.get('/:restaurant_id/edit', authenticated, (req, res) => {
 })
 
 //編輯餐廳
-router.put('/:restaurant_id/edit', authenticated, (req, res) => {
+router.put('/:restaurant_id/edit', (req, res) => {
     const { name, name_en, category, location, google_map, phone, rating, description, image } = req.body
     if (!name || !name_en || !category || !location || !google_map || !phone || !rating || !description || !image){       
         return res.render('edit', {
@@ -118,15 +126,16 @@ router.put('/:restaurant_id/edit', authenticated, (req, res) => {
      } 
     Restaurant.findOne({ _id: req.params.restaurant_id, userId: req.user._id }, (err, restaurant) => {
         if (err) console.error(err)
-        restaurant.name = req.body.name
-        restaurant.name_en = req.body.name_en
-        restaurant.category = req.body.category
-        restaurant.location = req.body.location
-        restaurant.google_map = req.body.google_map
-        restaurant.phone = req.body.phone
-        restaurant.rating = req.body.rating
-        restaurant.description = req.body.description
-        restaurant.image = req.body.image  
+        const { name, name_en, category, location, google_map, phone, rating, description, image } = req.body
+        restaurant.name = name
+        restaurant.name_en = name_en
+        restaurant.category = category
+        restaurant.location = location
+        restaurant.google_map = google_map
+        restaurant.phone = phone
+        restaurant.rating = rating
+        restaurant.description = description
+        restaurant.image = image  
         restaurant.save(err => {
             if (err) return console.error(err)
             return res.redirect('/')
@@ -135,7 +144,7 @@ router.put('/:restaurant_id/edit', authenticated, (req, res) => {
 })
 
 //刪除餐廳
-router.delete('/:restaurant_id/delete', authenticated, (req, res) => {
+router.delete('/:restaurant_id/delete', (req, res) => {
     Restaurant.findOne({ _id: req.params.restaurant_id, userId: req.user._id }, (err, restaurant) => {
         if (err) return console.error(err) 
         restaurant.remove(err => {
