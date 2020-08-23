@@ -77,36 +77,47 @@ header {
   font-size: 3rem;
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
+@media screen and (min-width: 992px) {
+  .user-form{
+    width: 40%;
+  }
+  .restaurant-form{
+    width: 60%;
+  }
+}
 
 @media screen and (max-width: 992px) {
-
+  .user-form{
+    width: 60%;
+  }
   .card img{
     height: 115px;
-
   }
 }
 
 @media screen and (max-width: 768px) {
-  
+  .user-form{
+    width: 60%;
+  }
   .restaurant-show-title {
     font-size: 2rem;
   }
 }
 
 @media screen and (max-width: 575px) {
-  
+  .restaurant-form, .user-form{
+    width: 80%;
+  }
   .card img{
     height: auto;
   }
-  
 }
 
-.new-restaurant-form, .login-form {
+.restaurant-form, .user-form {
   background-color: #fce2cf;
   border-radius: 8px;
   margin-top: -100px;
   margin-bottom: 50px;
-  width: 60%;
 }
 
 .title{
@@ -137,4 +148,8 @@ label{
 
 .input-group{
   float: left;
+}
+
+.log{
+  float: right;
 }
