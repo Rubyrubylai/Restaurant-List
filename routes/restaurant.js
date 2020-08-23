@@ -76,6 +76,7 @@ router.get('/:restaurant_id', (req, res) => {
         .lean()
         .exec((err, restaurant) => {
             if (err) return console.error(err)
+            console.log(restaurant._id)
             return res.render('show', { restaurant })
         })
 })
@@ -121,6 +122,7 @@ router.put('/:restaurant_id/edit', (req, res) => {
 //刪除餐廳
 router.delete('/:restaurant_id/delete', (req, res) => {
     Restaurant.findOne({ _id: req.params.restaurant_id, userId: req.user._id }, (err, restaurant) => {
+        console.log(req.params.restaurant_id)
         if (err) return console.error(err) 
         restaurant.remove(err => {
             if (err) return console.error(err)

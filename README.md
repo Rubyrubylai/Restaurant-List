@@ -30,7 +30,7 @@
 # 安裝
 1. 開啟終端機(Terminal)，cd到存放專案本機位置並執行:
 ```
-git clone https://github.com/Rubyrubylai/Restaurant-List-V4.git
+git clone https://github.com/Rubyrubylai/restaurant-list.git
 ```
 2. 在 https://developers.facebook.com/ 上創建一個新專案
 

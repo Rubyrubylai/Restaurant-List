@@ -28,6 +28,8 @@ router.get('/', (req, res) => {
                     return a.category > b.category
                 }
             })
+            const set = new Set()
+            restaurants = restaurants.filter(restaurant => !set.has(restaurant.name) ? set.add(restaurant.name) : false);
             res.render('index', { restaurants, home })
         })
 })
@@ -45,8 +47,8 @@ router.post('/:restaurant_id/favorite', (req, res) => {
     Restaurant.findOne({ _id: req.params.restaurant_id })
         .lean()
         .exec((err, restaurant) => {
-            console.log(restaurant)
-            if (restaurant.userId === req.user._id) {
+            //將物件轉成字串再進行比較
+            if (restaurant.userId.toString()== req.user._id.toString()) {
                 console.log('此餐廳已存在')
                 return res.redirect('/')
             } else {
