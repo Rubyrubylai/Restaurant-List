@@ -10,7 +10,7 @@
       {{/if}}
         <h4 class="mb-2">尋找餐廳：</h4>
         <div class="input-group col-10">
-          <input type="text" name="keyword" class="form-control" placeholder="輸入餐廳" aria-label="Restaurant Name..." value="{{keyword}}" aria-describedby="search-button">
+          <input type="text" name="keyword" class="form-control" placeholder="輸入餐廳" aria-label="Restaurant Name" value="{{keyword}}" aria-describedby="search-button">
           <div class="input-group-append">
             <button class="btn btn-major" name = "name" value = "search" type="submit" id="search-button"><i class="fas fa-search"></i></button>
           </div>              
@@ -84,12 +84,12 @@
             </span>
               
             <!-- Button trigger modal -->
-            <button class="btn btn-sm" style="float:right;" data-toggle="modal" data-target="#exampleModal">
+            <button class="btn btn-sm" style="float:right;" data-toggle="modal" data-target="#s{{this._id}}">
               <i class="fas fa-trash-alt" style="color: rgb(219, 23, 23);"></i>
             </button>
 
             <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="s{{this._id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -134,4 +134,5 @@
   </a>
 </div>
 {{/if}}
+
 

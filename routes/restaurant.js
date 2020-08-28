@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Restaurant = require('../models/restaurant')
-const restaurant = require('../models/restaurant')
+const Favorite = require('../models/favorite') 
 
 router.get('/', (req, res) => {
     Restaurant.find({ userId: req.user._id })
@@ -64,7 +64,16 @@ router.post('/new', (req, res) => {
         })
         restaurant.save(err => {
             if (err) return console.error(err)
-            return res.redirect('/restaurants')
+            console.log(restaurant)
+            const favorite = new Favorite({
+                restaurantId: restaurant._id,
+                userId
+            })
+            favorite.save(err => {
+                if (err) return console.error(err)
+                return res.redirect('/restaurants')
+            })
+            
         })
     }      
 })
@@ -122,11 +131,16 @@ router.put('/:restaurant_id/edit', (req, res) => {
 //刪除餐廳
 router.delete('/:restaurant_id/delete', (req, res) => {
     Restaurant.findOne({ _id: req.params.restaurant_id, userId: req.user._id }, (err, restaurant) => {
-        console.log(req.params.restaurant_id)
         if (err) return console.error(err) 
         restaurant.remove(err => {
             if (err) return console.error(err)
-            return res.redirect('/restaurants')
+            Favorite.findOne({ restaurantId: req.params._id, userId: req.user._id }, (err, favorite) => {
+                if (err) return console.error(err) 
+                favorite.remove(err => {
+                    if (err) return console.error(err) 
+                    return res.redirect('/restaurants')
+                })
+            })
         })
     })
 })

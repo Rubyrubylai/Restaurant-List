@@ -4,8 +4,13 @@ const User = require('../user')
 const restaurantSeed = require('./restaurant.json')
 const userSeed = require('./user.json')
 var bcrypt = require('bcryptjs')
+const Favorite = require('../favorite')
 
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+if (process.env.NODE_ENV !== 'production'){
+    require('dotenv').config()
+}
+
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/restaurant', { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
 
 const db = mongoose.connection
 
@@ -39,7 +44,17 @@ db.once('open', () => {
                                 "description": restaurant.description,
                                 "userId": user._id
                             }
+                        ).then(restaurant => {
+                            Favorite.create(
+                                {
+                                    "userId": user._id,
+                                    "restaurantId": restaurant._id
+                                }
+                            )
+                        }
+                            
                         )
+                       
                     })
                 })
             })

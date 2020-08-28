@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Restaurant = require('../models/restaurant')
-const restaurant = require('../models/restaurant')
+const Favorite = require('../models/favorite')
 
 router.get('/', (req, res) => {
     Restaurant.find()
@@ -29,47 +29,62 @@ router.get('/', (req, res) => {
                 }
             })
             const set = new Set()
-            restaurants = restaurants.filter(restaurant => !set.has(restaurant.name) ? set.add(restaurant.name) : false);
-            res.render('index', { restaurants, home })
+            restaurants = restaurants.filter(restaurant => !set.has(restaurant.name) ? set.add(restaurant.name) : false)
+            return res.render('index', { restaurants, home })
         })
 })
 
-router.get('/:restaurant_id', (req, res) => {
-    Restaurant.findOne({ _id: req.params.restaurant_id })
-        .lean()
-        .exec((err, restaurant) => {
-            if (err) return console.error(err)
-            res.render('show', { restaurant })
-        })
-})
+// router.get('/:restaurant_id', (req, res) => {
+//     Restaurant.findOne({ _id: req.params.restaurant_id })
+//         .lean()
+//         .exec((err, restaurant) => {
+//             console.log(req.params.restaurant_id)
+//             console.log(restaurant)
+//             if (err) return console.error(err)
+//             res.render('show', { restaurant })
+//         })
+// })
 
 router.post('/:restaurant_id/favorite', (req, res) => {
-    Restaurant.findOne({ _id: req.params.restaurant_id })
+    Favorite.findOne({ restaurantId: req.params.restaurant_id, userId: req.user._id })
         .lean()
-        .exec((err, restaurant) => {
-            //將物件轉成字串再進行比較
-            if (restaurant.userId.toString()== req.user._id.toString()) {
+        .exec((err, favorite) => {
+            if (favorite) {
                 console.log('此餐廳已存在')
                 return res.redirect('/')
-            } else {
-            const { name, name_en, category, location, google_map, phone, rating, description, image } = restaurant
-            const userId = req.user._id
-            const favoriteRestaurant = new Restaurant({
-                name,
-                name_en,
-                category,
-                location,
-                google_map,
-                phone,
-                rating,
-                description,
-                image,
-                userId
-            })
-            favoriteRestaurant.save((err) => {
-                if (err) return console.error(err)
-                return res.redirect('/')
-            })
+            } else {     
+                Restaurant.findOne({ _id: req.params.restaurant_id })
+                    .lean()
+                    .exec((err, restaurant) => {
+                        console.log(req.params.restaurant_id)
+                        const { name, name_en, category, location, google_map, phone, rating, description, image } = restaurant
+                        const userId = req.user._id
+                        restaurant = new Restaurant({
+                            name,
+                            name_en,
+                            category,
+                            location,
+                            google_map,
+                            phone,
+                            rating,
+                            description,
+                            image,
+                            userId
+                        })
+                        restaurant.save((err) => {
+                            if (err) return console.error(err)
+                            favorite = new Favorite({
+                                restaurantId: req.params.restaurant_id,
+                                userId
+                            })
+                            favorite.save((err) => {
+                                console.log('新增餐廳')
+                                console.log(favorite)
+                                if (err) return console.error(err)
+                                return res.redirect('/')
+                            })
+                        })
+                    })
             }
         })        
 })
