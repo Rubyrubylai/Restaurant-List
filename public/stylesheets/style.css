@@ -113,6 +113,10 @@ header {
   }
 }
 
+#card-container{
+  padding-bottom: 50px;
+}
+
 .restaurant-form, .user-form {
   background-color: #fce2cf;
   border-radius: 8px;

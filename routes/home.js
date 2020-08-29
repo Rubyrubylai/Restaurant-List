@@ -51,6 +51,7 @@ router.post('/:restaurant_id/favorite', (req, res) => {
         .exec((err, favorite) => {
             if (favorite) {
                 console.log('此餐廳已存在')
+                req.flash('warning_msg', '此餐廳已存在')
                 return res.redirect('/')
             } else {     
                 Restaurant.findOne({ _id: req.params.restaurant_id })
@@ -79,6 +80,7 @@ router.post('/:restaurant_id/favorite', (req, res) => {
                             })
                             favorite.save((err) => {
                                 console.log('新增餐廳')
+                                req.flash('success_msg', '已成功新增')
                                 if (err) return console.error(err)
                                 return res.redirect('/')
                             })
