@@ -56,7 +56,6 @@ router.post('/:restaurant_id/favorite', (req, res) => {
                 Restaurant.findOne({ _id: req.params.restaurant_id })
                     .lean()
                     .exec((err, restaurant) => {
-                        console.log(req.params.restaurant_id)
                         const { name, name_en, category, location, google_map, phone, rating, description, image } = restaurant
                         const userId = req.user._id
                         restaurant = new Restaurant({
@@ -75,11 +74,11 @@ router.post('/:restaurant_id/favorite', (req, res) => {
                             if (err) return console.error(err)
                             favorite = new Favorite({
                                 restaurantId: req.params.restaurant_id,
-                                userId
+                                userId,
+                                isSame: restaurant.id
                             })
                             favorite.save((err) => {
                                 console.log('新增餐廳')
-                                console.log(favorite)
                                 if (err) return console.error(err)
                                 return res.redirect('/')
                             })

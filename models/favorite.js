@@ -13,6 +13,10 @@ const favoriteSchema = new Schema({
         ref: 'Restaurant',
         index: true,
         required: true
+    },
+    isSame: {
+        type:  Schema.Types.ObjectId,
+        required: true
     }
 })
 

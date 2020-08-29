@@ -60,14 +60,15 @@ router.post('/new', (req, res) => {
             rating,
             description,
             image,
-            userId     
+            userId
         })
         restaurant.save(err => {
             if (err) return console.error(err)
             console.log(restaurant)
             const favorite = new Favorite({
                 restaurantId: restaurant._id,
-                userId
+                userId,
+                isSame: restaurant._id
             })
             favorite.save(err => {
                 if (err) return console.error(err)
@@ -134,7 +135,7 @@ router.delete('/:restaurant_id/delete', (req, res) => {
         if (err) return console.error(err) 
         restaurant.remove(err => {
             if (err) return console.error(err)
-            Favorite.findOne({ restaurantId: req.params._id, userId: req.user._id }, (err, favorite) => {
+            Favorite.findOne({ isSame: req.params.restaurant_id, userId: req.user._id }, (err, favorite) => {
                 if (err) return console.error(err) 
                 favorite.remove(err => {
                     if (err) return console.error(err) 

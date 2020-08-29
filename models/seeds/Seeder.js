@@ -48,7 +48,8 @@ db.once('open', () => {
                             Favorite.create(
                                 {
                                     "userId": user._id,
-                                    "restaurantId": restaurant._id
+                                    "restaurantId": restaurant._id,
+                                    "isSame": restaurant._id 
                                 }
                             )
                         }
