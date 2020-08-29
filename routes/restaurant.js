@@ -82,11 +82,10 @@ router.post('/new', (req, res) => {
 
 //顯示餐廳詳細資料
 router.get('/:restaurant_id', (req, res) => {
-    Restaurant.findOne({ _id: req.params.restaurant_id, userId: req.user._id })
+    Restaurant.findOne({ _id: req.params.restaurant_id })
         .lean()
         .exec((err, restaurant) => {
             if (err) return console.error(err)
-            console.log(restaurant._id)
             return res.render('show', { restaurant })
         })
 })

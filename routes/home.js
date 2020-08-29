@@ -34,17 +34,7 @@ router.get('/', (req, res) => {
         })
 })
 
-// router.get('/:restaurant_id', (req, res) => {
-//     Restaurant.findOne({ _id: req.params.restaurant_id })
-//         .lean()
-//         .exec((err, restaurant) => {
-//             console.log(req.params.restaurant_id)
-//             console.log(restaurant)
-//             if (err) return console.error(err)
-//             res.render('show', { restaurant })
-//         })
-// })
-
+//將餐廳加入我的最愛
 router.post('/:restaurant_id/favorite', (req, res) => {
     Favorite.findOne({ restaurantId: req.params.restaurant_id, userId: req.user._id })
         .lean()

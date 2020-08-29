@@ -7,12 +7,12 @@
 |功能|URL|描述|
 |----|---|----|
 |首頁|/|查看所有餐廳的資料(名稱、分類、評分)|
-|詳細資訊|/:restaurant_id|點選餐廳圖片，查看其詳細資訊（類別、地址、電話、評分)|
+|詳細資訊|/restaurants/:restaurant_id|點選餐廳文字，查看其詳細資訊（類別、地址、電話、評分)|
 |加入我的最愛|/:restaurant_id/favorite|點選愛心按鈕，將此餐廳加入我的最愛|
 
 + 網站功能-我的最愛
 |首頁|/restaurants|查看自己收藏餐廳的資料(名稱、分類、評分)|
-|詳細資訊|/restaurants/:restaurant_id|點選餐廳圖片，查看其詳細資訊（類別、地址、電話、評分)|
+|詳細資訊|/restaurants/:restaurant_id|點選餐廳文字，查看其詳細資訊（類別、地址、電話、評分)|
 |新增|/restaurants/new|點選右下角的+號圖案，新增餐廳清單|
 |編輯|/restaurants/:restaurant_id/edit|點選編輯按鈕，編輯餐廳清單|
 |刪除|/restaurants/:restaurant_id/delete|點選刪除按鈕，將此餐廳從清單中移除|
