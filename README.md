@@ -10,6 +10,7 @@
 |詳細資訊|/:restaurant_id|點選餐廳文字，查看其詳細資訊（類別、地址、電話、評分)|
 |加入我的最愛|/:restaurant_id/favorite|點選愛心按鈕，將此餐廳加入我的最愛|
 |從我的最愛移除|/:restaurant_id/unfavorite|點選愛心按鈕，將此餐廳從我的最愛移除|
+
 ![image](https://github.com/Rubyrubylai/restaurant-list/blob/main/image/favorite.PNG)
 
 + 網站功能-我的最愛
@@ -21,6 +22,7 @@
 |編輯|/restaurants/:restaurant_id/edit|點選編輯按鈕，編輯餐廳清單|
 |刪除|/restaurants/:restaurant_id/delete|點選刪除按鈕，將此餐廳從清單中移除|
 |分類|/restaurants/sort|依照評分(/rating)及餐廳名稱(/name)排名|
+
 ![image](https://github.com/Rubyrubylai/restaurant-list/blob/main/image/home.PNG)
 
 + 使用者功能
@@ -31,6 +33,7 @@
 |FB登入|/auth/facebook|FB使用者登入|
 |登出|/users/logout|使用者登出|
 |註冊|/users/register|使用者註冊|
+
 ![image](https://github.com/Rubyrubylai/restaurant-list/blob/main/image/logIn.PNG)
 
 # 安裝
