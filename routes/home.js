@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Restaurant = require('../models/restaurant')
-const Favorite = require('../models/favorite')
+const Custom_restaurant = require('../models/custom_restaurant')
 
 router.get('/', (req, res) => {
     Restaurant.find()
@@ -28,28 +28,39 @@ router.get('/', (req, res) => {
                     return a.category > b.category
                 }
             })
-            const set = new Set()
-            restaurants = restaurants.filter(restaurant => !set.has(restaurant.name) ? set.add(restaurant.name) : false)
+            //const set = new Set()
+            //restaurants = restaurants.filter(restaurant => !set.has(restaurant.name) ? set.add(restaurant.name) : false)
             return res.render('index', { restaurants, home })
+        })
+})
+
+//顯示餐廳詳細資料
+router.get('/:restaurant_id', (req, res) => {
+    Restaurant.findOne({ _id: req.params.restaurant_id})
+        .lean()
+        .exec((err, restaurant) => {
+            console.log(restaurant)
+            if (err) console.error(err)
+            return res.render('show', { restaurant })
         })
 })
 
 //將餐廳加入我的最愛
 router.post('/:restaurant_id/favorite', (req, res) => {
-    Favorite.findOne({ restaurantId: req.params.restaurant_id, userId: req.user._id })
+    Custom_restaurant.findOne({ restaurantId: req.params.restaurant_id, userId: req.user._id })
         .lean()
         .exec((err, favorite) => {
             if (favorite) {
                 console.log('此餐廳已存在')
                 req.flash('warning_msg', '此餐廳已存在')
                 return res.redirect('/')
-            } else {     
+            } else {  
                 Restaurant.findOne({ _id: req.params.restaurant_id })
                     .lean()
                     .exec((err, restaurant) => {
                         const { name, name_en, category, location, google_map, phone, rating, description, image } = restaurant
                         const userId = req.user._id
-                        restaurant = new Restaurant({
+                        const custom_restaurant = new Custom_restaurant({
                             name,
                             name_en,
                             category,
@@ -59,25 +70,28 @@ router.post('/:restaurant_id/favorite', (req, res) => {
                             rating,
                             description,
                             image,
-                            userId
+                            userId,
+                            restaurantId: restaurant._id,
+                            origin: false
                         })
-                        restaurant.save((err) => {
+                        custom_restaurant.save(err => {
                             if (err) return console.error(err)
-                            favorite = new Favorite({
-                                restaurantId: req.params.restaurant_id,
-                                userId,
-                                isSame: restaurant.id
-                            })
-                            favorite.save((err) => {
-                                console.log('新增餐廳')
-                                req.flash('success_msg', '已成功新增')
-                                if (err) return console.error(err)
-                                return res.redirect('/')
-                            })
+                            return res.redirect('/restaurants')
                         })
                     })
             }
         })        
+})
+
+//將餐廳從我的最愛移除
+router.post('/:restaurant_id/unfavorite', (req, res) => {
+    Custom_restaurant.findOne({ _id: req.params.restaurant_id, userId: req.user._id }, (err, custom_restaurant) => {
+        if (err) console.error(err)
+        custom_restaurant.remove(err => {
+            if (err) console.error(err)
+            return res.redirect('/restaurants')
+        })
+    })
 })
 
 module.exports = router

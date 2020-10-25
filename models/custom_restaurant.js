@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const restaurantSchema = new Schema({
+const custom_restaurantSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -37,7 +37,23 @@ const restaurantSchema = new Schema({
     name_en: {
         type: String,
         required: true
+    },
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        index: true,
+        required: true
+    },
+    restaurantId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Restaurant',
+        index: true,
+        required: true
+    },
+    origin: {
+        type: Boolean,
+        required: true
     }
 })
 
-module.exports = mongoose.model('Restaurant', restaurantSchema)
+module.exports = mongoose.model('Custom_restaurant', custom_restaurantSchema)

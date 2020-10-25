@@ -1,10 +1,10 @@
 const express = require('express')
 const router = express.Router()
 const Restaurant = require('../models/restaurant')
-const Favorite = require('../models/favorite') 
+const Custom_restaurant = require('../models/custom_restaurant') 
 
 router.get('/', (req, res) => {
-    Restaurant.find({ userId: req.user._id })
+    Custom_restaurant.find({ userId: req.user._id })
         .lean()
         .exec((err, restaurants) => {
             let favorite = true
@@ -59,18 +59,25 @@ router.post('/new', (req, res) => {
             phone,
             rating,
             description,
-            image,
-            userId
+            image
         })
         restaurant.save(err => {
             if (err) return console.error(err)
-            console.log(restaurant)
-            const favorite = new Favorite({
-                restaurantId: restaurant._id,
+            const custom_restaurant = new Custom_restaurant({
+                name,
+                name_en,
+                category,
+                location,
+                google_map,
+                phone,
+                rating,
+                description,
+                image,
                 userId,
-                isSame: restaurant._id
+                restaurantId: restaurant._id,
+                origin: true
             })
-            favorite.save(err => {
+            custom_restaurant.save(err => {
                 if (err) return console.error(err)
                 return res.redirect('/restaurants')
             })
@@ -82,7 +89,7 @@ router.post('/new', (req, res) => {
 
 //顯示餐廳詳細資料
 router.get('/:restaurant_id', (req, res) => {
-    Restaurant.findOne({ _id: req.params.restaurant_id })
+    Custom_restaurant.findOne({ _id: req.params.restaurant_id })
         .lean()
         .exec((err, restaurant) => {
             if (err) return console.error(err)
@@ -92,7 +99,7 @@ router.get('/:restaurant_id', (req, res) => {
 
 //進入編輯餐廳的頁面
 router.get('/:restaurant_id/edit', (req, res) => {
-    Restaurant.findOne({ _id: req.params.restaurant_id, userId: req.user._id })
+    Custom_restaurant.findOne({ _id: req.params.restaurant_id, userId: req.user._id })
         .lean()
         .exec((err, restaurant) => {
             if (err) console.error(err)
@@ -108,40 +115,60 @@ router.put('/:restaurant_id/edit', (req, res) => {
             restaurant: req.body,
             error_msg: '所有欄位皆為必填'
         })
-     } 
-    Restaurant.findOne({ _id: req.params.restaurant_id, userId: req.user._id }, (err, restaurant) => {
+    } 
+    Custom_restaurant.findOne({ _id: req.params.restaurant_id, userId: req.user._id }, (err, custom_restaurant) => {
         if (err) console.error(err)
-        const { name, name_en, category, location, google_map, phone, rating, description, image } = req.body
-        restaurant.name = name
-        restaurant.name_en = name_en
-        restaurant.category = category
-        restaurant.location = location
-        restaurant.google_map = google_map
-        restaurant.phone = phone
-        restaurant.rating = rating
-        restaurant.description = description
-        restaurant.image = image  
-        restaurant.save(err => {
-            if (err) return console.error(err)
-            return res.redirect('/restaurants')
-        })    
+        if (custom_restaurant.origin) {
+            const { name, name_en, category, location, google_map, phone, rating, description, image } = req.body
+            custom_restaurant.name = name
+            custom_restaurant.name_en = name_en
+            custom_restaurant.category = category
+            custom_restaurant.location = location
+            custom_restaurant.google_map = google_map
+            custom_restaurant.phone = phone
+            custom_restaurant.rating = rating
+            custom_restaurant.description = description
+            custom_restaurant.image = image  
+            custom_restaurant.save(err => {
+                if (err) console.error(err)
+                Restaurant.findOne({ _id: custom_restaurant.restaurantId }, (err, restaurant) => {
+                    if (err) console.error(err)
+                    const { name, name_en, category, location, google_map, phone, rating, description, image } = custom_restaurant
+                    restaurant.name = name
+                    restaurant.name_en = name_en
+                    restaurant.category = category
+                    restaurant.location = location
+                    restaurant.google_map = google_map
+                    restaurant.phone = phone
+                    restaurant.rating = rating
+                    restaurant.description = description
+                    restaurant.image = image
+                    restaurant.save(err => {
+                        if (err) return console.error(err)
+                        return res.redirect('/restaurants')
+                    })
+                })
+            })    
+        }
     })
 })
 
 //刪除餐廳
 router.delete('/:restaurant_id/delete', (req, res) => {
-    Restaurant.findOne({ _id: req.params.restaurant_id, userId: req.user._id }, (err, restaurant) => {
+    Custom_restaurant.findOne({ _id: req.params.restaurant_id, userId: req.user._id }, (err, custom_restaurant) => {
         if (err) return console.error(err) 
-        restaurant.remove(err => {
-            if (err) return console.error(err)
-            Favorite.findOne({ isSame: req.params.restaurant_id, userId: req.user._id }, (err, favorite) => {
-                if (err) return console.error(err) 
-                favorite.remove(err => {
+        if (custom_restaurant.origin) {
+            custom_restaurant.remove(err => {
+                if (err) return console.error(err)
+                Restaurant.findOne({ _id: custom_restaurant.restaurantId }, (err, restaurant) => {
                     if (err) return console.error(err) 
-                    return res.redirect('/restaurants')
+                    restaurant.remove(err => {
+                        if (err) return console.error(err) 
+                        return res.redirect('/restaurants')
+                    })
                 })
             })
-        })
+        }
     })
 })
 
