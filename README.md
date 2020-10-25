@@ -7,8 +7,9 @@
 |功能|URL|描述|
 |----|---|----|
 |首頁|/|查看所有餐廳的資料(名稱、分類、評分)|
-|詳細資訊|/restaurants/:restaurant_id|點選餐廳文字，查看其詳細資訊（類別、地址、電話、評分)|
+|詳細資訊|/:restaurant_id|點選餐廳文字，查看其詳細資訊（類別、地址、電話、評分)|
 |加入我的最愛|/:restaurant_id/favorite|點選愛心按鈕，將此餐廳加入我的最愛|
+|從我的最愛移除|/:restaurant_id/unfavorite|點選愛心按鈕，將此餐廳從我的最愛移除|
 
 + 網站功能-我的最愛
 |首頁|/restaurants|查看自己收藏餐廳的資料(名稱、分類、評分)|
@@ -54,12 +55,10 @@ PORT = 3000
 ```
 6. 新增使用者和餐廳的種子資料
 ```
-cd models/seeds
-node Seeder.js
+node .\models\seeds\Seeder.js
 ```
 7. 執行專案
 ```
-cd ../../
 npm run dev
 ```
 8. 在本機端 http://localhost:3000 開啟網址
