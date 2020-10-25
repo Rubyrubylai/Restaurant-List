@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const Restaurant = require('../models/restaurant')
-const Favorite = require('../models/favorite')
 const Custom_restaurant = require('../models/custom_restaurant') 
 
 router.get('/', (req, res) => {

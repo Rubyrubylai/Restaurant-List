@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
 const Restaurant = require('../restaurant')
 const User = require('../user')
+const Custom_restaurant = require('../custom_restaurant')
 const restaurantSeed = require('./restaurant.json')
 const userSeed = require('./user.json')
 var bcrypt = require('bcryptjs')
-const Favorite = require('../favorite')
 
 if (process.env.NODE_ENV !== 'production'){
     require('dotenv').config()
@@ -41,16 +41,24 @@ db.once('open', () => {
                                 "phone": restaurant.phone,
                                 "google_map": restaurant.google_map,
                                 "rating": restaurant.rating,
-                                "description": restaurant.description,
-                                "userId": user._id
+                                "description": restaurant.description
                             }
                         )
                         .then(restaurant => {
-                            Favorite.create(
+                            Custom_restaurant.create(
                                 {
+                                    "name": restaurant.name,
+                                    "name_en": restaurant.name_en,
+                                    "category": restaurant.category,
+                                    "image": restaurant.image,
+                                    "location": restaurant.location,
+                                    "phone": restaurant.phone,
+                                    "google_map": restaurant.google_map,
+                                    "rating": restaurant.rating,
+                                    "description": restaurant.description,
                                     "userId": user._id,
                                     "restaurantId": restaurant._id,
-                                    "isSame": restaurant._id 
+                                    "origin": true
                                 }
                             )
                         })                       
