@@ -10,7 +10,7 @@ if (process.env.NODE_ENV !== 'production'){
     require('dotenv').config()
 }
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/restaurant', { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
 
 const db = mongoose.connection
 
@@ -21,14 +21,14 @@ db.on('error', () => {
 db.once('open', () => {
     console.log('db corrected!')
     userSeed.forEach((user, index) => {
-        bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(user.password, salt, (err, hash) => {
-                if (err) throw err
-                user.password = hash
+        bcrypt.genSalt(10)
+            .then(salt => bcrypt.hash(user.password, salt))
+            .then(hash => 
                 User.create({
                     email: user.email,
                     password: hash
-                }).then(user => {
+                })
+                .then(user => {
                     const restaurants = index ? restaurantSeed.slice(3,6) : restaurantSeed.slice(0,3)
                     restaurants.forEach((restaurant) => {
                         Restaurant.create(
@@ -44,7 +44,8 @@ db.once('open', () => {
                                 "description": restaurant.description,
                                 "userId": user._id
                             }
-                        ).then(restaurant => {
+                        )
+                        .then(restaurant => {
                             Favorite.create(
                                 {
                                     "userId": user._id,
@@ -52,14 +53,11 @@ db.once('open', () => {
                                     "isSame": restaurant._id 
                                 }
                             )
-                        }
-                            
-                        )
-                       
+                        })                       
                     })
                 })
-            })
-        })      
-    })
+            )  
+        }     
+    )
     console.log('done')
 })

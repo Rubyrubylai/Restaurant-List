@@ -47,7 +47,7 @@
         <div class="card mb-3">
           <img class="card-img-top" src="{{this.image}}" alt="restaurant image">
           <div class="card-body p-3">
-            <a href="/restaurants/{{this._id}}" class="text-secondary">
+            <a href="/{{this._id}}" class="text-secondary">
               <h6 class="card-title mb-1">{{this.name}}</h6>
             </a>
             <div class="restaurant-category mb-1">
@@ -84,6 +84,7 @@
             </span>
               
             <!-- Button trigger modal -->
+            {{#if this.origin}}
             <button class="btn btn-sm" style="float:right;" data-toggle="modal" data-target="#s{{this._id}}">
               <i class="fas fa-trash-alt" style="color: rgb(219, 23, 23);"></i>
             </button>
@@ -115,7 +116,16 @@
               <button type="button" class="btn btn-sm " style="margin-right:4px; float:right;">
                 <i class="fas fa-edit" style="color: rgb(71, 62, 206)"></i>
               </button>
-            </a>              
+            </a>
+
+            {{else}}
+             <form action="/{{this._id}}/unfavorite" method="POST" style="display:inline;">
+              <button type="submit" class="btn btn-sm" style="float:right;">
+                <i class="far fa-heart" style="color: rgb(228, 0, 0)"></i>
+              </button>
+            </form>  
+
+            {{/if}}      
           </div>
         </div>
         {{/each}}
